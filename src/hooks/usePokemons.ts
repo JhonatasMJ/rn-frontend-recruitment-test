@@ -7,7 +7,7 @@ export function usePokemons() {
   const { data, loading, error, refetch } = useQuery<GetPokemonsResponse>(GET_POKEMONS);
 
   const pokemons = useMemo(
-    () => data?.pokemon_v2_pokemon ?? [],
+    () => data?.pokemon ?? [],
     [data]
   );
 

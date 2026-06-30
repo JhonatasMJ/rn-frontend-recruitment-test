@@ -6,5 +6,5 @@ export interface Pokemon {
   }
 
   export interface GetPokemonsResponse {
-    pokemon_v2_pokemon: Pokemon[];
+    pokemon: Pokemon[];
   }
