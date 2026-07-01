@@ -5,12 +5,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 interface ErrorProps {
   message: string;
-  onRedirect?: () => void;
+  onRedirect?: boolean;
 }
 
 export default function Error({ message, onRedirect }: ErrorProps) {
   return (
-    <SafeAreaView className="flex-1 bg-neutral-50">
+    <SafeAreaView className="flex-1 bg-neutral-50" >
     <View className="px-5 pt-2">
       {onRedirect && (
           <Pressable

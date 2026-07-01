@@ -29,7 +29,7 @@ export default function PokemonDetail() {
 
   if (error || !pokemonDetails) {
     return (
-     <Error message="Não foi possível carregar os detalhes deste Pokémon." />
+     <Error onRedirect={true} message="Não foi possível carregar os detalhes deste Pokémon." />
     );
   }
 
