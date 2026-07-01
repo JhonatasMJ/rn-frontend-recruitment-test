@@ -11,16 +11,14 @@ export default function TabsLayout() {
           paddingTop: 8,
           paddingBottom: 8,
           borderTopWidth: 1,
-          borderTopColor: "#ffffff",
-          backgroundColor: "#FFFFFF",
+          borderTopColor: "#F3F4F6",
+          backgroundColor: "#FAFAFA",
         },
-        
         tabBarLabelStyle: {
           fontSize: 11,
-          fontWeight: "600",
+          fontWeight: "500",
         },
-
-        tabBarActiveTintColor: "#E53935",
+        tabBarActiveTintColor: "#111827",
         tabBarInactiveTintColor: "#9CA3AF",
       }}
     >
