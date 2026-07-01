@@ -1,5 +1,6 @@
 import Error from "@/components/Error";
 import Loading from "@/components/Loading";
+import PokemonStats from "@/components/PokemonStats";
 import { useFavorites } from "@/hooks/useFavorites";
 import { usePokemonDetails } from "@/hooks/usePokemonsDetails";
 import { getPokemonImage } from "@/utils/getPokemonImage";
@@ -8,14 +9,8 @@ import { formatHeight, formatWeight } from "@/utils/pokemonDetailsFormat";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
-import {
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 
 export default function PokemonDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -24,14 +19,15 @@ export default function PokemonDetail() {
   const { toggleFavorite, isFavorite } = useFavorites();
 
   if (loading) {
-    return (
-      <Loading />
-    );
+    return <Loading />;
   }
 
   if (error || !pokemonDetails) {
     return (
-     <Error onRedirect={true} message="Não foi possível carregar os detalhes deste Pokémon." />
+      <Error
+        onRedirect
+        message="Não foi possível carregar os detalhes deste Pokémon."
+      />
     );
   }
 
@@ -43,7 +39,7 @@ export default function PokemonDetail() {
       <View className="px-5 pt-2">
         <Pressable
           onPress={() => router.back()}
-          className="h-10 w-10 items-center justify-center rounded-md bg-white border border-gray-200"
+          className="h-10 w-10 items-center justify-center rounded-md border border-gray-200 bg-white"
         >
           <Ionicons name="chevron-back" size={22} color="#374151" />
         </Pressable>
@@ -55,21 +51,21 @@ export default function PokemonDetail() {
       >
         <View className="items-center pt-2">
           <Text className="text-xs font-medium text-gray-400">
-            #{String(pokemonDetails.id).padStart(3, "0")}
+            #{pokemonId}
           </Text>
           <Text className="mt-1 text-3xl font-semibold capitalize tracking-tight text-gray-900">
             {pokemonDetails.name}
           </Text>
 
-          <View className="mt-3 flex-row gap-2">
+          <View className="mt-3 flex-row gap-2 flex-wrap">
             {pokemonDetails.pokemontypes.map(({ type }) => (
               <View
                 key={type.name}
-                className="rounded-full px-3 py-1"
+                className="rounded-md px-3 py-2 flex-1"
                 style={{ backgroundColor: getPokemonColor(type.name) + "20" }}
               >
                 <Text
-                  className="text-xs font-medium capitalize"
+                  className="text-xs font-medium capitalize text-center"
                   style={{ color: getPokemonColor(type.name) }}
                 >
                   {type.name}
@@ -79,7 +75,7 @@ export default function PokemonDetail() {
           </View>
 
           <View
-            className="relative mt-6 w-full items-center justify-center rounded-2xl py-4"
+            className="relative mt-6 w-full items-center justify-center rounded-xl py-4"
             style={{ backgroundColor: typeColor + "18" }}
           >
             <Pressable
@@ -98,10 +94,9 @@ export default function PokemonDetail() {
               contentFit="contain"
             />
           </View>
-        
         </View>
 
-        <View className="mt-8 flex-row rounded-2xl bg-white px-2 py-5">
+        <View className="mt-8 flex-row rounded-xl bg-white px-2 py-5">
           {[
             { label: "Altura", value: formatHeight(pokemonDetails.height) },
             { label: "Peso", value: formatWeight(pokemonDetails.weight) },
@@ -122,38 +117,17 @@ export default function PokemonDetail() {
           ))}
         </View>
 
-        <View className="mt-8">
-          <Text className="mb-3 text-xs font-medium uppercase tracking-widest text-gray-400">Status</Text>
-          <View className="gap-3 rounded-2xl bg-white px-4 py-5">
-            {pokemonDetails.pokemonstats.map(({ stat, base_stat }) => (
-              <View key={stat.name} className="flex-row items-center gap-3">
-                <Text className="w-24 text-xs capitalize text-gray-500">
-                  {stat.name}
-                </Text>
-                <View className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-100">
-                  <View
-                    className="h-full rounded-full"
-                    style={{
-                      width: `${Math.min(base_stat, 255) / 2.55}%`,
-                      backgroundColor: typeColor,
-                    }}
-                  />
-                </View>
-                <Text className="w-7 text-right text-xs font-medium text-gray-700">
-                  {base_stat}
-                </Text>
-              </View>
-            ))}
-          </View>
-        </View>
+        <PokemonStats pokemon={pokemonDetails} typeColor={typeColor} />
 
         <View className="mt-8">
-          <Text className="mb-3 text-xs font-medium uppercase tracking-widest text-gray-400">Habilidades</Text>
+          <Text className="mb-3 text-xs font-medium uppercase tracking-widest text-gray-400">
+            Habilidades
+          </Text>
           <View className="gap-2">
             {pokemonDetails.pokemonabilities.map(({ ability, is_hidden }) => (
               <View
                 key={ability.name}
-                className="flex-row items-center justify-between rounded-2xl bg-white px-4 py-3.5"
+                className="flex-row items-center justify-between rounded-xl bg-white px-4 py-3.5"
               >
                 <Text className="capitalize text-sm text-gray-800">
                   {ability.name}
@@ -168,15 +142,17 @@ export default function PokemonDetail() {
 
         {pokemonDetails.pokemonspecy && (
           <View className="mt-8">
-            <Text className="mb-3 text-xs font-medium uppercase tracking-widest text-gray-400">Espécie</Text>
+            <Text className="mb-3 text-xs font-medium uppercase tracking-widest text-gray-400">
+              Espécie
+            </Text>
             <View className="flex-row gap-3">
-              <View className="flex-1 rounded-2xl bg-white px-4 py-4">
+              <View className="flex-1 rounded-xl bg-white px-4 py-4">
                 <Text className="text-[11px] text-gray-400">Captura</Text>
                 <Text className="mt-1 text-lg font-semibold text-gray-800">
                   {pokemonDetails.pokemonspecy.capture_rate}
                 </Text>
               </View>
-              <View className="flex-1 rounded-2xl bg-white px-4 py-4">
+              <View className="flex-1 rounded-xl bg-white px-4 py-4">
                 <Text className="text-[11px] text-gray-400">Felicidade</Text>
                 <Text className="mt-1 text-lg font-semibold text-gray-800">
                   {pokemonDetails.pokemonspecy.base_happiness}
