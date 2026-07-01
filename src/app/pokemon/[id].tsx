@@ -1,5 +1,6 @@
 import Error from "@/components/Error";
 import Loading from "@/components/Loading";
+import { useFavorites } from "@/hooks/useFavorites";
 import { usePokemonDetails } from "@/hooks/usePokemonsDetails";
 import { getPokemonImage } from "@/utils/getPokemonImage";
 import { getPokemonColor } from "@/utils/pokemonColors";
@@ -20,6 +21,7 @@ export default function PokemonDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const pokemonId = Number(Array.isArray(id) ? id[0] : id);
   const { pokemonDetails, loading, error } = usePokemonDetails(pokemonId);
+  const { toggleFavorite, isFavorite } = useFavorites();
 
   if (loading) {
     return (
@@ -77,15 +79,26 @@ export default function PokemonDetail() {
           </View>
 
           <View
-            className="mt-6 items-center justify-center rounded-2xl flex-1 w-full py-4 "
+            className="relative mt-6 w-full items-center justify-center rounded-2xl py-4"
             style={{ backgroundColor: typeColor + "18" }}
           >
+            <Pressable
+              onPress={() => toggleFavorite(pokemonDetails.id)}
+              className="absolute right-2 top-2 z-10 h-9 w-9 items-center justify-center rounded-md bg-white/80"
+            >
+              <Ionicons
+                name={isFavorite(pokemonDetails.id) ? "heart" : "heart-outline"}
+                size={22}
+                color={isFavorite(pokemonDetails.id) ? "#ef4444" : "#9ca3af"}
+              />
+            </Pressable>
             <Image
               source={{ uri: getPokemonImage(pokemonDetails.id) }}
               style={{ width: 180, height: 180 }}
               contentFit="contain"
             />
           </View>
+        
         </View>
 
         <View className="mt-8 flex-row rounded-2xl bg-white px-2 py-5">
