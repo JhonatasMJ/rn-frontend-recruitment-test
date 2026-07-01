@@ -1,3 +1,5 @@
+import Error from "@/components/Error";
+import Loading from "@/components/Loading";
 import { usePokemonDetails } from "@/hooks/usePokemonsDetails";
 import { getPokemonImage } from "@/utils/getPokemonImage";
 import { getPokemonColor } from "@/utils/pokemonColors";
@@ -6,7 +8,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import {
-  ActivityIndicator,
   Pressable,
   ScrollView,
   Text,
@@ -14,17 +15,6 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-function formatStatName(name: string) {
-  return name.replace("-", " ");
-}
-
-function SectionLabel({ children }: { children: string }) {
-  return (
-    <Text className="mb-3 text-xs font-medium uppercase tracking-widest text-gray-400">
-      {children}
-    </Text>
-  );
-}
 
 export default function PokemonDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -33,29 +23,13 @@ export default function PokemonDetail() {
 
   if (loading) {
     return (
-      <View className="flex-1 items-center justify-center bg-neutral-50">
-        <ActivityIndicator size="small" color="#9CA3AF" />
-      </View>
+      <Loading />
     );
   }
 
   if (error || !pokemonDetails) {
     return (
-      <SafeAreaView className="flex-1 bg-neutral-50">
-        <View className="px-5 pt-2">
-          <Pressable
-            onPress={() => router.back()}
-            className="h-10 w-10 items-center justify-center rounded-md bg-white"
-          >
-            <Ionicons name="chevron-back" size={22} color="#374151" />
-          </Pressable>
-        </View>
-        <View className="flex-1 items-center justify-center px-8">
-          <Text className="text-center text-sm text-gray-400">
-            Não foi possível carregar os detalhes deste Pokémon.
-          </Text>
-        </View>
-      </SafeAreaView>
+     <Error message="Não foi possível carregar os detalhes deste Pokémon." />
     );
   }
 
@@ -136,12 +110,12 @@ export default function PokemonDetail() {
         </View>
 
         <View className="mt-8">
-          <SectionLabel>Status</SectionLabel>
+          <Text className="mb-3 text-xs font-medium uppercase tracking-widest text-gray-400">Status</Text>
           <View className="gap-3 rounded-2xl bg-white px-4 py-5">
             {pokemonDetails.pokemonstats.map(({ stat, base_stat }) => (
               <View key={stat.name} className="flex-row items-center gap-3">
                 <Text className="w-24 text-xs capitalize text-gray-500">
-                  {formatStatName(stat.name)}
+                  {stat.name}
                 </Text>
                 <View className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-100">
                   <View
@@ -161,7 +135,7 @@ export default function PokemonDetail() {
         </View>
 
         <View className="mt-8">
-          <SectionLabel>Habilidades</SectionLabel>
+          <Text className="mb-3 text-xs font-medium uppercase tracking-widest text-gray-400">Habilidades</Text>
           <View className="gap-2">
             {pokemonDetails.pokemonabilities.map(({ ability, is_hidden }) => (
               <View
@@ -181,7 +155,7 @@ export default function PokemonDetail() {
 
         {pokemonDetails.pokemonspecy && (
           <View className="mt-8">
-            <SectionLabel>Espécie</SectionLabel>
+            <Text className="mb-3 text-xs font-medium uppercase tracking-widest text-gray-400">Espécie</Text>
             <View className="flex-row gap-3">
               <View className="flex-1 rounded-2xl bg-white px-4 py-4">
                 <Text className="text-[11px] text-gray-400">Captura</Text>

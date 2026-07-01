@@ -3,15 +3,20 @@ import { router } from "expo-router";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PokemonItem from "./PokemonItem";
+import Loading from "./Loading";
+import Error from "./Error";
 
 export default function PokemonList() {
-  const { pokemons, loading } = usePokemons();
+  const { pokemons, loading, error } = usePokemons();
 
   if (loading) {
     return (
-      <View className="flex-1 items-center justify-center bg-neutral-50">
-        <ActivityIndicator size="small" color="#9CA3AF" />
-      </View>
+      <Loading />
+    );
+  }
+  if (error) {
+    return (
+      <Error message="Não foi possível carregar a lista de Pokémons." />
     );
   }
 
